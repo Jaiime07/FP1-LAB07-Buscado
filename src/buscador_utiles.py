@@ -22,8 +22,20 @@ def normalizar_texto(texto: str) -> list[str]:
     Devuelve:
     list[str]: Una lista de palabras normalizadas.
     """    
-    #TODO: Ejercicio 1
-    pass
+    texto = texto.lower() #las cadenas son INMUTABLES!!!!!!!!
+    for i in PUNTUACION:
+        texto = texto.replace(i, " ")
+
+    palabras = texto.split()
+    
+    #usar el esquema de filtrado
+
+    filtrado = []
+    for p in palabras:
+        if p not in STOP_WORDS and p.isalpha():
+            filtrado.append(p)
+    return filtrado
+
 
 def procesar_url_en_indice(url: str, texto: str, indice: dict[str, set[str]]):
     """
@@ -37,8 +49,13 @@ def procesar_url_en_indice(url: str, texto: str, indice: dict[str, set[str]]):
     texto (str): El texto extraído de la página web.
     indice (dict[str, set[str]]): El índice de búsqueda a actualizar.
     """
-    # TODO: Ejercicio 2
-    pass
+    palabras = normalizar_texto(texto)
+    
+    for p in palabras:
+        if p not in indice:
+            indice[p] = set()
+        indice[p].add(url)
+
 
 
 def buscar_palabra_simple(palabra: str, indice: dict[str, set[str]]) -> set[str]:
@@ -55,8 +72,13 @@ def buscar_palabra_simple(palabra: str, indice: dict[str, set[str]]) -> set[str]
     Devuelve:
     set[str]: Un conjunto de URLs donde se encontró la palabra.
     """    
-    # TODO: Ejercicio 3
-    return set()
+    p = normalizar_texto(palabra)[0]
+    if p not in indice:
+        return set()
+    res = set()
+    if p in indice:
+        return indice[palabra]
+    
 
 def buscar_palabras_or(frase: str, indice: dict[str, set[str]]) -> set[str]:
     """
